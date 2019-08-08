@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class Shooting : MonoBehaviour
 {
+    public GameObject bulletPrefab;
     public float attackRange;
     public float attackCooldown;
-    public int attackDamage;
+    public float attackDamage;
+    public float bulletSpeed;
 
     float lastAttack;
 
@@ -17,18 +19,27 @@ public class Shooting : MonoBehaviour
 
     private void Update()
     {
+        if (lastAttack + attackCooldown < Time.time)
+        {
+            ShootBullet();
+        }
+    }
+
+    private void ShootBullet()
+    {
         Attackable attackable = GetClosestAttackableInRange();
 
         if (attackable)
         {
-            Debug.DrawLine(transform.position, GetClosestAttackableInRange().transform.position);
+            GameObject bulletHolder = GameObject.Find("Bullets");
+            GameObject newObject = Instantiate(bulletPrefab, transform.position, Quaternion.identity, bulletHolder.transform);
 
-            if (lastAttack + attackCooldown < Time.time)
-            {
-                // If something is in range
-                attackable.Damage(attackDamage);
-                lastAttack = Time.time;
-            }
+            Bullet bullet = newObject.GetComponent<Bullet>();
+            bullet.target = GetClosestAttackableInRange();
+            bullet.damage = attackDamage;
+            bullet.speed = bulletSpeed;
+
+            lastAttack = Time.time;
         }
     }
 
@@ -46,8 +57,8 @@ public class Shooting : MonoBehaviour
         foreach (var attackable in attackables)
         {
             float currentDist = Vector3.Distance(transform.position, attackable.transform.position);
-            
-            if(currentDist < closestAttackableDistance && currentDist < attackRange)
+
+            if (currentDist < closestAttackableDistance && currentDist < attackRange)
             {
                 closestAttackable = attackable;
                 closestAttackableDistance = currentDist;

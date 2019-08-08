@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class Attackable : MonoBehaviour
 {
-    public int health;
+    public float health;
 
-    public void Damage(int damage)
+    public void Damage(float damage)
     {
         health -= damage;
 
-        if(health <= 0)
+        if(health <= 0.0)
         {
             Die();
         }
