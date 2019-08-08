@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemySpawner : MonoBehaviour
+public class EnemiesSpawner : MonoBehaviour
 {
     public float enemySpawnCooldown;
     public GameObject enemyPrefab;
