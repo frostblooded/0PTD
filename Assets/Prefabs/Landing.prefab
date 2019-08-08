@@ -45,4 +45,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   towerPrefab: {fileID: 8877654110430815239, guid: 024eb8d7dbc037a43b2018e1ea2e4139,
     type: 3}
-  occupied: 0
+  towerDespawnDelay: 12

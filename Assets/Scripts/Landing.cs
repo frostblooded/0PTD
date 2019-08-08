@@ -5,11 +5,32 @@ using UnityEngine;
 public class Landing : MonoBehaviour
 {
     public GameObject towerPrefab;
-    public bool occupied;
+    public float towerDespawnDelay;
+
+    float towerSpawnTime;
+    GameObject spawnedTower;
+
+    private void Update()
+    {
+        if(IsOccupied() && towerSpawnTime + towerDespawnDelay < Time.time)
+        {
+            DespawnTower();
+        }
+    }
 
     public void SpawnTower()
     {
-        Instantiate(towerPrefab, transform);
-        occupied = true;
+        spawnedTower = Instantiate(towerPrefab, transform);
+        towerSpawnTime = Time.time;
+    }
+
+    private void DespawnTower()
+    {
+        Destroy(spawnedTower);
+    }
+
+    public bool IsOccupied()
+    {
+        return spawnedTower != null;
     }
 }

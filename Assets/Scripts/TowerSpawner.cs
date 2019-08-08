@@ -54,7 +54,7 @@ public class TowerSpawner : MonoBehaviour
         {
             Landing landing = landingObject.GetComponent<Landing>();
 
-            if(!landing.occupied)
+            if(!landing.IsOccupied())
             {
                 result.Add(landing);
             }
