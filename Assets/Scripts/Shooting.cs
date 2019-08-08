@@ -35,7 +35,7 @@ public class Shooting : MonoBehaviour
             GameObject newObject = Instantiate(bulletPrefab, transform.position, Quaternion.identity, bulletHolder.transform);
 
             Bullet bullet = newObject.GetComponent<Bullet>();
-            bullet.target = GetClosestAttackableInRange();
+            bullet.target = attackable;
             bullet.damage = attackDamage;
             bullet.speed = bulletSpeed;
 
@@ -58,7 +58,7 @@ public class Shooting : MonoBehaviour
         {
             float currentDist = Vector3.Distance(transform.position, attackable.transform.position);
 
-            if (currentDist < closestAttackableDistance && currentDist < attackRange)
+            if (currentDist < closestAttackableDistance && currentDist <= attackRange)
             {
                 closestAttackable = attackable;
                 closestAttackableDistance = currentDist;
