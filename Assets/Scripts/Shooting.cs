@@ -11,6 +11,7 @@ public class Shooting : MonoBehaviour
     public float bulletSpeed;
 
     float lastAttack;
+    Attackable lockedOnTarget;
 
     private void Start()
     {
@@ -27,19 +28,27 @@ public class Shooting : MonoBehaviour
 
     private void ShootBullet()
     {
-        Attackable attackable = GetClosestAttackableInRange();
+        SetLockedOnTarget();
 
-        if (attackable)
+        if (lockedOnTarget)
         {
             GameObject bulletHolder = GameObject.Find("Bullets");
             GameObject newObject = Instantiate(bulletPrefab, transform.position, Quaternion.identity, bulletHolder.transform);
 
             Bullet bullet = newObject.GetComponent<Bullet>();
-            bullet.target = attackable;
+            bullet.target = lockedOnTarget;
             bullet.damage = attackDamage;
             bullet.speed = bulletSpeed;
 
             lastAttack = Time.time;
+        }
+    }
+
+    private void SetLockedOnTarget()
+    {
+        if(!lockedOnTarget || Vector3.Distance(transform.position, lockedOnTarget.transform.position) > attackRange)
+        {
+            lockedOnTarget = GetClosestAttackableInRange();
         }
     }
 
