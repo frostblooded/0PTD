@@ -4,12 +4,19 @@ using UnityEngine;
 
 public class Maze : MonoBehaviour
 {
+    public int minBasePlatformXScale = 20;
+    public int maxBasePlatformXScale = 50;
+    public int minBasePlatformYScale = 20;
+    public int maxBasePlatformYScale = 50;
+
     public GameObject mazeUnitPrefab;
     public List<List<MazeUnit>> matrix;
 
     int basePlatformXScale;
     int basePlatformZScale;
     Transform platformsHolder;
+
+    readonly float MAZE_UNIT_POSITION_OFFSET = 0.5f;
 
     private void Start()
     {
@@ -21,8 +28,8 @@ public class Maze : MonoBehaviour
 
     private void SpawnBasePlatform()
     {
-        basePlatformXScale = Random.Range(20, 50);
-        basePlatformZScale = Random.Range(20, 50);
+        basePlatformXScale = Random.Range(minBasePlatformXScale, maxBasePlatformXScale);
+        basePlatformZScale = Random.Range(minBasePlatformYScale, minBasePlatformYScale);
 
         GameObject basePlatform = GameObject.CreatePrimitive(PrimitiveType.Cube);
         basePlatform.name = "Base Platform";
@@ -57,7 +64,7 @@ public class Maze : MonoBehaviour
     private void SpawnMazeUnit(int i, int j, float currentX, float currentZ)
     {
         GameObject mazeUnitObject = Instantiate(mazeUnitPrefab, platformsHolder);
-        mazeUnitObject.transform.position = new Vector3(currentX - 0.5f, 1, currentZ - 0.5f);
+        mazeUnitObject.transform.position = new Vector3(currentX - MAZE_UNIT_POSITION_OFFSET, 1, currentZ - MAZE_UNIT_POSITION_OFFSET);
 
         MazeUnit mazeUnit = mazeUnitObject.GetComponent<MazeUnit>();
         matrix[matrix.Count - 1].Add(mazeUnit);
