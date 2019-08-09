@@ -27,6 +27,7 @@ public class MazeBuilder : MonoBehaviour
                 GameObject newCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 newCube.transform.position = new Vector3(i + 0.5f, 1, j + 0.5f);
                 newCube.transform.parent = platformsHolder;
+                newCube.isStatic = true;
             }
         }
     }
