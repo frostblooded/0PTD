@@ -46,17 +46,19 @@ public class Maze : MonoBehaviour
             MazeUnit current = stack.Pop();
             current.gameObject.SetActive(false);
 
-            foreach(var neighbour in current.RandomizedDirectNeighbours())
+            foreach(var neighbour in current.RandomizedNeighbours())
             {
                 if(neighbour.CanBeDug())
                 {
-                    yield return new WaitForSeconds(0);
+                    yield return null;
 
                     neighbour.gameObject.SetActive(false);
                     stack.Push(neighbour);
                 }
             }
         }
+
+        Debug.Log("End pathing");
     }
 
     private void SpawnBasePlatform()
@@ -106,6 +108,7 @@ public class Maze : MonoBehaviour
         if(AreBorderIndexes(i, j))
         {
             borderMazeUnits.Add(mazeUnit);
+            mazeUnit.isBorder = true;
         }
 
         SetNeighbouring(mazeUnit, i, j);
@@ -115,22 +118,22 @@ public class Maze : MonoBehaviour
     {
         if(i > 0)
         {
-            matrix[i - 1][j].BecomeDirectNeighbours(mazeUnit);
+            matrix[i - 1][j].BecomeNeighbours(mazeUnit);
 
             if(j > 0)
             {
-                matrix[i - 1][j - 1].BecomeNeighbours(mazeUnit);
+                matrix[i - 1][j - 1].BecomeDiagonalNeighbours(mazeUnit);
             }
 
             if(j < basePlatformZScale - 1)
             {
-                matrix[i - 1][j + 1].BecomeNeighbours(mazeUnit);
+                matrix[i - 1][j + 1].BecomeDiagonalNeighbours(mazeUnit);
             }
         }
 
         if(j > 0)
         {
-            matrix[i][j - 1].BecomeDirectNeighbours(mazeUnit);
+            matrix[i][j - 1].BecomeNeighbours(mazeUnit);
         }
     }
 

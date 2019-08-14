@@ -7,42 +7,44 @@ public class MazeUnit : MonoBehaviour
     public List<MazeUnit> neighbours;
 
     // These are the neighbours that aren't neighbouring diagonally
-    public List<MazeUnit> directNeighbours;
+    public List<MazeUnit> diagonalNeighbours;
 
-    public List<MazeUnit> RandomizedDirectNeighbours()
+    public bool isBorder = false;
+
+    public List<MazeUnit> RandomizedNeighbours()
     {
-        List<MazeUnit> list = new List<MazeUnit>(directNeighbours);
+        List<MazeUnit> list = new List<MazeUnit>(neighbours);
         list.Shuffle();
         return list;
     }
 
-    public void BecomeDirectNeighbours(MazeUnit other)
+    public void BecomeDiagonalNeighbours(MazeUnit other)
     {
-        directNeighbours.Add(other);
-        other.directNeighbours.Add(this);
+        BecomeNeighbours(other);
+        diagonalNeighbours.Add(other);
+        other.diagonalNeighbours.Add(this);
     }
 
     public void BecomeNeighbours(MazeUnit other)
     {
-        BecomeDirectNeighbours(other);
         neighbours.Add(other);
         other.neighbours.Add(this);
     }
 
     public bool CanBeDug()
     {
-        return gameObject.activeSelf && GetInactiveNeighboursCount() <= 1;
+        return gameObject.activeSelf && GetInactiveDiagonalNeighboursCount() <= 1 && !isBorder;
     }
 
-    private int GetInactiveNeighboursCount()
+    private int GetInactiveDiagonalNeighboursCount()
     {
-        int inactiveNeighbours = 0;
+        int inactiveDiagonalNeighbours = 0;
 
-        foreach(var neighbour in neighbours)
+        foreach(var diaognalNeighbour in diagonalNeighbours)
         {
-            if (!neighbour.gameObject.activeSelf) inactiveNeighbours++;
+            if (!diaognalNeighbour.gameObject.activeSelf) inactiveDiagonalNeighbours++;
         }
 
-        return inactiveNeighbours;
+        return inactiveDiagonalNeighbours;
     }
 }
