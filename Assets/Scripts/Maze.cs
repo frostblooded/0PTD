@@ -15,8 +15,6 @@ public class Maze : MonoBehaviour
     int basePlatformXScale;
     int basePlatformZScale;
     Transform platformsHolder;
-
-    [SerializeField]
     List<MazeUnit> borderMazeUnits;
 
     readonly float MAZE_UNIT_POSITION_OFFSET = 0.5f;
@@ -30,35 +28,53 @@ public class Maze : MonoBehaviour
         SpawnBasePlatform();
         SpawnMazeUnits();
         MakePath();
-        StartCoroutine("MakePath");
     }
 
-    private IEnumerator MakePath()
+    private void MakePath()
     {
-        int startingMazeUnitIndex = Random.Range(0, borderMazeUnits.Count);
-        MazeUnit startingMazeUnit = borderMazeUnits[startingMazeUnitIndex];
+        int startingBorderMazeUnitIndex = Random.Range(0, borderMazeUnits.Count);
+        MazeUnit startingBorderMazeUnit = borderMazeUnits[startingBorderMazeUnitIndex];
+        startingBorderMazeUnit.gameObject.SetActive(false);
 
-        Stack<MazeUnit> stack = new Stack<MazeUnit>();
-        stack.Push(startingMazeUnit);
+        MazeUnit startingMazeUnit = null;
 
-        while(stack.Count > 0)
+        foreach(var neighbour in startingBorderMazeUnit.GetDiggableNeighbours())
         {
-            MazeUnit current = stack.Pop();
-            current.gameObject.SetActive(false);
-
-            foreach(var neighbour in current.RandomizedNeighbours())
+            if(!neighbour.isBorder)
             {
-                if(neighbour.CanBeDug())
-                {
-                    yield return null;
-
-                    neighbour.gameObject.SetActive(false);
-                    stack.Push(neighbour);
-                }
+                startingMazeUnit = neighbour;
+                break;
             }
         }
 
+        MakePathHelper(startingMazeUnit);
         Debug.Log("End pathing");
+    }
+
+    private bool MakePathHelper(MazeUnit current, int length = 0)
+    {
+        current.gameObject.SetActive(false);
+        bool foundPath = false;
+
+        foreach(var dir in current.GetRandomizedAvailableDiggableDirections())
+        {
+            var neighbour = current.neighbours[dir];
+
+            if(neighbour.isBorder && length >= basePlatformXScale * basePlatformZScale / 6)
+            {
+                neighbour.gameObject.SetActive(false);
+                return true;
+            }
+
+            if(neighbour.CanBeDugFrom(dir.GetOpposite()))
+            {
+                foundPath = MakePathHelper(neighbour, length + 1);
+                if (foundPath) return true;
+            }
+        }
+
+        current.gameObject.SetActive(true);
+        return foundPath;
     }
 
     private void SpawnBasePlatform()
@@ -104,6 +120,8 @@ public class Maze : MonoBehaviour
 
         MazeUnit mazeUnit = mazeUnitObject.GetComponent<MazeUnit>();
         matrix[matrix.Count - 1].Add(mazeUnit);
+        mazeUnit.x = i;
+        mazeUnit.y = j;
 
         if(AreBorderIndexes(i, j))
         {
@@ -118,22 +136,22 @@ public class Maze : MonoBehaviour
     {
         if(i > 0)
         {
-            matrix[i - 1][j].BecomeNeighbours(mazeUnit);
+            matrix[i - 1][j].BecomeNeighbours(MazeUnit.Direction.Top, mazeUnit);
 
             if(j > 0)
             {
-                matrix[i - 1][j - 1].BecomeDiagonalNeighbours(mazeUnit);
+                matrix[i - 1][j - 1].BecomeNeighbours(MazeUnit.Direction.TopLeft, mazeUnit);
             }
 
             if(j < basePlatformZScale - 1)
             {
-                matrix[i - 1][j + 1].BecomeDiagonalNeighbours(mazeUnit);
+                matrix[i - 1][j + 1].BecomeNeighbours(MazeUnit.Direction.TopRight, mazeUnit);
             }
         }
 
         if(j > 0)
         {
-            matrix[i][j - 1].BecomeNeighbours(mazeUnit);
+            matrix[i][j - 1].BecomeNeighbours(MazeUnit.Direction.Left, mazeUnit);
         }
     }
 
