@@ -6,17 +6,24 @@ public class Maze : MonoBehaviour
 {
     public int minBasePlatformXScale = 20;
     public int maxBasePlatformXScale = 50;
-    public int minBasePlatformYScale = 20;
-    public int maxBasePlatformYScale = 50;
+    public int minBasePlatformZScale = 20;
+    public int maxBasePlatformZScale = 50;
 
     public GameObject mazeUnitPrefab;
-    public List<List<MazeUnit>> matrix;
+    public GameObject basePlatformPrefab;
 
-    int basePlatformXScale;
-    int basePlatformZScale;
+    List<List<MazeUnit>> matrix;
+
+    public int basePlatformXScale;
+    public int basePlatformZScale;
+
     Transform platformsHolder;
     List<MazeUnit> borderMazeUnits;
 
+    public int pathTries = 0;
+    public int pathLength = 0;
+
+    public int pathMaxTries = 1000;
     readonly float MAZE_UNIT_POSITION_OFFSET = 0.5f;
 
     private void Start()
@@ -48,11 +55,11 @@ public class Maze : MonoBehaviour
         }
 
         MakePathHelper(startingMazeUnit);
-        Debug.Log("End pathing");
     }
 
     private bool MakePathHelper(MazeUnit current, int length = 0)
     {
+        pathTries++;
         current.gameObject.SetActive(false);
         bool foundPath = false;
 
@@ -60,9 +67,10 @@ public class Maze : MonoBehaviour
         {
             var neighbour = current.neighbours[dir];
 
-            if(neighbour.isBorder && length >= basePlatformXScale * basePlatformZScale / 6)
+            if(neighbour.isBorder && (pathTries >= pathMaxTries || length >= basePlatformXScale * basePlatformZScale / 6))
             {
                 neighbour.gameObject.SetActive(false);
+                pathLength = length;
                 return true;
             }
 
@@ -80,11 +88,10 @@ public class Maze : MonoBehaviour
     private void SpawnBasePlatform()
     {
         basePlatformXScale = Random.Range(minBasePlatformXScale, maxBasePlatformXScale);
-        basePlatformZScale = Random.Range(minBasePlatformYScale, minBasePlatformYScale);
+        basePlatformZScale = Random.Range(minBasePlatformZScale, maxBasePlatformZScale);
 
-        GameObject basePlatform = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        GameObject basePlatform = Instantiate(basePlatformPrefab, platformsHolder);
         basePlatform.name = "Base Platform";
-        basePlatform.transform.parent = platformsHolder;
 
         Vector3 currentScale = basePlatform.transform.localScale;
         basePlatform.transform.localScale = new Vector3(basePlatformXScale, currentScale.y, basePlatformZScale);
