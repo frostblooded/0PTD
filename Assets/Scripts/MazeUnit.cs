@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MazeUnit : MonoBehaviour
@@ -9,6 +10,8 @@ public class MazeUnit : MonoBehaviour
     public bool isBorder = false;
 
     public int x, y;
+
+    public GameObject baseUnit;
 
     public readonly List<Direction> diggableDirections = new List<Direction>()
     {
@@ -49,6 +52,11 @@ public class MazeUnit : MonoBehaviour
     {
         neighbours.Add(direction, other);
         other.neighbours.Add(direction.GetOpposite(), this);
+    }
+
+    public bool HasInactiveNeighbours()
+    {
+        return neighbours.Values.ToList().Any(m => !m.gameObject.activeSelf);
     }
 
     public bool CanBeDugFrom(Direction direction)

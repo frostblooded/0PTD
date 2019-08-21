@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class Maze : MonoBehaviour
 {
-    public int minBasePlatformXScale = 20;
-    public int maxBasePlatformXScale = 50;
-    public int minBasePlatformZScale = 20;
-    public int maxBasePlatformZScale = 50;
+    public int minBaseXSize = 20;
+    public int maxBaseXSize = 50;
+    public int minBaseZSize = 20;
+    public int maxBaseZSize = 50;
 
     public GameObject mazeUnitPrefab;
+    public GameObject baseUnitPrefab;
     public GameObject basePlatformPrefab;
 
     List<List<MazeUnit>> matrix;
 
-    public int basePlatformXScale;
-    public int basePlatformZScale;
+    public Vector3 baseSize;
 
     Transform platformsHolder;
     List<MazeUnit> borderMazeUnits;
@@ -32,9 +32,33 @@ public class Maze : MonoBehaviour
         matrix = new List<List<MazeUnit>>();
         borderMazeUnits = new List<MazeUnit>();
 
-        SpawnBasePlatform();
+        baseSize = new Vector3(Random.Range(minBaseXSize, maxBaseXSize), 1, Random.Range(minBaseZSize, maxBaseZSize));
+
         SpawnMazeUnits();
         MakePath();
+        CleanupBase();
+    }
+
+    private void CleanupBase()
+    {
+        List<MazeUnit> mazeUnitsToBeRemoved = new List<MazeUnit>();
+
+        foreach(var mazeUnitList in matrix)
+        {
+            foreach(var mazeUnit in mazeUnitList)
+            {
+                if(mazeUnit.gameObject.activeSelf && !mazeUnit.HasInactiveNeighbours())
+                {
+                    mazeUnitsToBeRemoved.Add(mazeUnit);
+                }
+            }
+        }
+
+        foreach(var mazeUnit in mazeUnitsToBeRemoved)
+        {
+            mazeUnit.baseUnit.SetActive(false);
+            mazeUnit.gameObject.SetActive(false);
+        }
     }
 
     private void MakePath()
@@ -67,7 +91,7 @@ public class Maze : MonoBehaviour
         {
             var neighbour = current.neighbours[dir];
 
-            if(neighbour.isBorder && (pathTries >= pathMaxTries || length >= basePlatformXScale * basePlatformZScale / 6))
+            if(pathTries >= pathMaxTries || (neighbour.isBorder && length >= baseSize.x * baseSize.z / 6))
             {
                 neighbour.gameObject.SetActive(false);
                 pathLength = length;
@@ -85,38 +109,26 @@ public class Maze : MonoBehaviour
         return foundPath;
     }
 
-    private void SpawnBasePlatform()
-    {
-        basePlatformXScale = Random.Range(minBasePlatformXScale, maxBasePlatformXScale);
-        basePlatformZScale = Random.Range(minBasePlatformZScale, maxBasePlatformZScale);
-
-        GameObject basePlatform = Instantiate(basePlatformPrefab, platformsHolder);
-        basePlatform.name = "Base Platform";
-
-        Vector3 currentScale = basePlatform.transform.localScale;
-        basePlatform.transform.localScale = new Vector3(basePlatformXScale, currentScale.y, basePlatformZScale);
-    }
-
     private void SpawnMazeUnits()
     {
-        float halfBasePlatformXScale = basePlatformXScale / 2.0f;
-        float halfBasePlatformZScale = basePlatformZScale / 2.0f;
+        float halfBaseXSize = baseSize.x / 2.0f;
+        float halfBaseZSize = baseSize.z / 2.0f;
 
-        float currentX = halfBasePlatformXScale;
-        float currentZ = halfBasePlatformZScale;
+        float currentX = halfBaseXSize;
+        float currentZ = halfBaseZSize;
 
-        for(int i = 0; i < basePlatformXScale; i++)
+        for(int i = 0; i < baseSize.x; i++)
         {
             matrix.Add(new List<MazeUnit>());
 
-            for(int j = 0; j < basePlatformZScale; j++)
+            for(int j = 0; j < baseSize.z; j++)
             {
                 SpawnMazeUnit(i, j, currentX, currentZ);
                 currentZ--;
             }
 
             currentX--;
-            currentZ = halfBasePlatformZScale;
+            currentZ = halfBaseZSize;
         }
     }
 
@@ -125,7 +137,11 @@ public class Maze : MonoBehaviour
         GameObject mazeUnitObject = Instantiate(mazeUnitPrefab, transform);
         mazeUnitObject.transform.position = new Vector3(currentX - MAZE_UNIT_POSITION_OFFSET, 1, currentZ - MAZE_UNIT_POSITION_OFFSET);
 
+        GameObject baseUnitObject = Instantiate(baseUnitPrefab, platformsHolder);
+        baseUnitObject.transform.position = mazeUnitObject.transform.position + Vector3.down;
+
         MazeUnit mazeUnit = mazeUnitObject.GetComponent<MazeUnit>();
+        mazeUnit.baseUnit = baseUnitObject;
         matrix[matrix.Count - 1].Add(mazeUnit);
         mazeUnit.x = i;
         mazeUnit.y = j;
@@ -150,7 +166,7 @@ public class Maze : MonoBehaviour
                 matrix[i - 1][j - 1].BecomeNeighbours(MazeUnit.Direction.TopLeft, mazeUnit);
             }
 
-            if(j < basePlatformZScale - 1)
+            if(j < baseSize.z - 1)
             {
                 matrix[i - 1][j + 1].BecomeNeighbours(MazeUnit.Direction.TopRight, mazeUnit);
             }
@@ -164,6 +180,6 @@ public class Maze : MonoBehaviour
 
     private bool AreBorderIndexes(int i, int j)
     {
-        return i == 0 || j == 0 || i == basePlatformXScale - 1 || j == basePlatformZScale - 1;
+        return i == 0 || j == 0 || i == baseSize.x - 1 || j == baseSize.z - 1;
     }
 }
