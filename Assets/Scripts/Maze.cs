@@ -41,6 +41,9 @@ public class Maze : MonoBehaviour
 
     private void CleanupBase()
     {
+        // Maze units are not removed immediately, because that would change the state of the maze.
+        // That's why we first add the maze units that need to be removed into a list while they are still being searched
+        // and then deactivate them.
         List<MazeUnit> mazeUnitsToBeRemoved = new List<MazeUnit>();
 
         foreach(var mazeUnitList in matrix)
@@ -91,9 +94,8 @@ public class Maze : MonoBehaviour
         {
             var neighbour = current.neighbours[dir];
 
-            if(pathTries >= pathMaxTries || (neighbour.isBorder && length >= baseSize.x * baseSize.z / 6))
+            if(length >= baseSize.x * baseSize.z / 6)
             {
-                neighbour.gameObject.SetActive(false);
                 pathLength = length;
                 return true;
             }
@@ -101,7 +103,17 @@ public class Maze : MonoBehaviour
             if(neighbour.CanBeDugFrom(dir.GetOpposite()))
             {
                 foundPath = MakePathHelper(neighbour, length + 1);
-                if (foundPath) return true;
+
+                if (foundPath)
+                {
+                    return true;
+                }
+                else if(pathTries >= pathMaxTries && neighbour.CanBeDugFrom(dir.GetOpposite()))
+                {
+                    neighbour.gameObject.SetActive(false);
+                    pathLength = length;
+                    return true;
+                }
             }
         }
 
