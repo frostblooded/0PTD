@@ -18,7 +18,7 @@ public class Maze : MonoBehaviour
     public Vector3 baseSize;
 
     Transform platformsHolder;
-    List<MazeUnit> borderMazeUnits;
+    List<MazeUnit> startingMazeUnitCandidates;
 
     public int pathTries = 0;
     public int pathLength = 0;
@@ -30,7 +30,7 @@ public class Maze : MonoBehaviour
     {
         platformsHolder = GameObject.Find("Platforms").transform;
         matrix = new List<List<MazeUnit>>();
-        borderMazeUnits = new List<MazeUnit>();
+        startingMazeUnitCandidates = new List<MazeUnit>();
 
         baseSize = new Vector3(Random.Range(minBaseXSize, maxBaseXSize), 1, Random.Range(minBaseZSize, maxBaseZSize));
 
@@ -66,21 +66,8 @@ public class Maze : MonoBehaviour
 
     private void MakePath()
     {
-        int startingBorderMazeUnitIndex = Random.Range(0, borderMazeUnits.Count);
-        MazeUnit startingBorderMazeUnit = borderMazeUnits[startingBorderMazeUnitIndex];
-        startingBorderMazeUnit.gameObject.SetActive(false);
-
-        MazeUnit startingMazeUnit = null;
-
-        foreach(var neighbour in startingBorderMazeUnit.GetDiggableNeighbours())
-        {
-            if(!neighbour.isBorder)
-            {
-                startingMazeUnit = neighbour;
-                break;
-            }
-        }
-
+        int startingMazeUnitIndex = Random.Range(0, startingMazeUnitCandidates.Count);
+        MazeUnit startingMazeUnit = startingMazeUnitCandidates[startingMazeUnitIndex];
         MakePathHelper(startingMazeUnit);
     }
 
@@ -100,7 +87,7 @@ public class Maze : MonoBehaviour
                 return true;
             }
 
-            if(neighbour.CanBeDugFrom(dir.GetOpposite()))
+            if(!neighbour.isBorder && neighbour.CanBeDugFrom(dir.GetOpposite()))
             {
                 foundPath = MakePathHelper(neighbour, length + 1);
 
@@ -158,10 +145,14 @@ public class Maze : MonoBehaviour
         mazeUnit.x = i;
         mazeUnit.y = j;
 
+
         if(AreBorderIndexes(i, j))
         {
-            borderMazeUnits.Add(mazeUnit);
             mazeUnit.isBorder = true;
+        }
+        else
+        {
+            startingMazeUnitCandidates.Add(mazeUnit);
         }
 
         SetNeighbouring(mazeUnit, i, j);
