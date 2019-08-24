@@ -53,7 +53,10 @@ MonoBehaviour:
     type: 3}
   basePlatformPrefab: {fileID: 6926255004163262907, guid: eb92f7914d26a3543a950364839eab38,
     type: 3}
+  enemiesGoalPrefab: {fileID: 7429744866252930449, guid: 289932b55eb6710408eea8d3c1c84e87,
+    type: 3}
+  enemiesSpawnerPrefab: {fileID: 661295321802867360, guid: 6f6e630d161020949a0fe490cdb81508,
+    type: 3}
   baseSize: {x: 0, y: 0, z: 0}
   pathTries: 0
-  pathLength: 0
   pathMaxTries: 10000

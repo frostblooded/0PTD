@@ -12,6 +12,8 @@ public class Maze : MonoBehaviour
     public GameObject mazeUnitPrefab;
     public GameObject baseUnitPrefab;
     public GameObject basePlatformPrefab;
+    public GameObject enemiesGoalPrefab;
+    public GameObject enemiesSpawnerPrefab;
 
     List<List<MazeUnit>> matrix;
 
@@ -19,11 +21,11 @@ public class Maze : MonoBehaviour
 
     Transform platformsHolder;
     List<MazeUnit> startingMazeUnitCandidates;
+    public LinkedList<MazeUnit> path;
 
     public int pathTries = 0;
-    public int pathLength = 0;
-
     public int pathMaxTries = 1000;
+
     readonly float MAZE_UNIT_POSITION_OFFSET = 0.5f;
 
     private void Start()
@@ -31,12 +33,19 @@ public class Maze : MonoBehaviour
         platformsHolder = GameObject.Find("Platforms").transform;
         matrix = new List<List<MazeUnit>>();
         startingMazeUnitCandidates = new List<MazeUnit>();
+        path = new LinkedList<MazeUnit>();
 
         baseSize = new Vector3(Random.Range(minBaseXSize, maxBaseXSize), 1, Random.Range(minBaseZSize, maxBaseZSize));
 
         SpawnMazeUnits();
         MakePath();
         CleanupBase();
+
+        var firstPathUnit = path.First.Value;
+        var lastPathUnit = path.Last.Value;
+        path.RemoveFirst();
+        Instantiate(enemiesSpawnerPrefab, firstPathUnit.transform.position, Quaternion.identity);
+        Instantiate(enemiesGoalPrefab, lastPathUnit.transform.position, Quaternion.identity);
     }
 
     private void CleanupBase()
@@ -71,10 +80,11 @@ public class Maze : MonoBehaviour
         MakePathHelper(startingMazeUnit);
     }
 
-    private bool MakePathHelper(MazeUnit current, int length = 0)
+    private bool MakePathHelper(MazeUnit current, int length = 1)
     {
         pathTries++;
         current.gameObject.SetActive(false);
+        path.AddLast(current);
         bool foundPath = false;
 
         foreach(var dir in current.GetRandomizedAvailableDiggableDirections())
@@ -83,7 +93,6 @@ public class Maze : MonoBehaviour
 
             if(length >= baseSize.x * baseSize.z / 6)
             {
-                pathLength = length;
                 return true;
             }
 
@@ -97,14 +106,15 @@ public class Maze : MonoBehaviour
                 }
                 else if(pathTries >= pathMaxTries && neighbour.CanBeDugFrom(dir.GetOpposite()))
                 {
+                    path.AddLast(neighbour);
                     neighbour.gameObject.SetActive(false);
-                    pathLength = length;
                     return true;
                 }
             }
         }
 
         current.gameObject.SetActive(true);
+        path.RemoveLast();
         return foundPath;
     }
 

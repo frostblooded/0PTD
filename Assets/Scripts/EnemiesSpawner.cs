@@ -9,11 +9,13 @@ public class EnemiesSpawner : MonoBehaviour
 
     float lastSpawnTime;
     GameObject enemiesHolder;
+    Maze maze;
 
     private void Start()
     {
         lastSpawnTime = Mathf.NegativeInfinity;
         enemiesHolder = GameObject.Find("Enemies");
+        maze = GameObject.Find("Maze").GetComponent<Maze>();
     }
 
     private void Update()
@@ -26,7 +28,10 @@ public class EnemiesSpawner : MonoBehaviour
 
     public void Spawn()
     {
-        Instantiate(enemyPrefab, transform.position, Quaternion.identity, enemiesHolder.transform);
+        var enemyObject = Instantiate(enemyPrefab, transform.position, Quaternion.identity, enemiesHolder.transform);
+        var enemyComponent = enemyObject.GetComponent<EnemyMovement>();
+        enemyComponent.currentPathGoal = maze.path.First;
+
         lastSpawnTime = Time.time;
     }
 }
