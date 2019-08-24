@@ -6,12 +6,10 @@ public class TowerSpawner : MonoBehaviour
 {
     public float spawnCooldown;
 
-    Transform landingsHolder;
     float lastSpawnTime;
 
     private void Start()
     {
-        landingsHolder = GameObject.Find("Landings").transform;
         lastSpawnTime = Mathf.NegativeInfinity;
     }
 
@@ -48,12 +46,11 @@ public class TowerSpawner : MonoBehaviour
 
     private List<Landing> GetUnoccupiedLandings()
     {
+        Landing[] landings = FindObjectsOfType<Landing>();
         var result = new List<Landing>();
 
-        foreach (Transform landingObject in landingsHolder)
+        foreach (Landing landing in landings)
         {
-            Landing landing = landingObject.GetComponent<Landing>();
-
             if(!landing.IsOccupied())
             {
                 result.Add(landing);
