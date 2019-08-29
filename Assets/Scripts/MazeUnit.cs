@@ -31,21 +31,17 @@ public class MazeUnit : MonoBehaviour
         { Direction.Left, new List<Direction>() { Direction.Top, Direction.TopRight, Direction.Right, Direction.BottomRight, Direction.Bottom } }
     };
 
-    // An available direction, in which there is a neighbour (he is not null).
+    // Available directions, in which there is a neighbour (he is not null).
     public List<Direction> GetRandomizedAvailableDiggableDirections()
     {
-        var res = new List<Direction>(diggableDirections);
-        res.RemoveAll(dir => neighbours[dir] == null);
+        var res = GetAvailableDiggableDirections();
         res.Shuffle();
         return res;
     }
 
     public List<MazeUnit> GetDiggableNeighbours()
     {
-        var diggableDirectionsWithNeighbours = new List<Direction>(diggableDirections);
-        diggableDirectionsWithNeighbours.RemoveAll(dir => !neighbours.ContainsKey(dir));
-        diggableDirectionsWithNeighbours.RemoveAll(dir => neighbours[dir] == null);
-        return diggableDirectionsWithNeighbours.ConvertAll(dir => neighbours[dir]);
+        return GetAvailableDiggableDirections().ConvertAll(dir => neighbours[dir]);
     }
 
     public void BecomeNeighbours(Direction direction, MazeUnit other)
@@ -64,11 +60,18 @@ public class MazeUnit : MonoBehaviour
         return gameObject.activeSelf && !isBorder && CheckNeighboursForDigging(direction);
     }
 
+    private List<Direction> GetAvailableDiggableDirections()
+    {
+        var res = new List<Direction>(diggableDirections);
+        res.RemoveAll(dir => !neighbours.ContainsKey(dir));
+        return res;
+    }
+
     private bool CheckNeighboursForDigging(Direction direction)
     {
         List<Direction> directionsToCheck = diggableDirectionsCheckGroups[direction];
+        directionsToCheck.RemoveAll(dir => !neighbours.ContainsKey(dir));
         List<MazeUnit> neighboursToCheck = directionsToCheck.ConvertAll(dir => neighbours[dir]);
-        neighboursToCheck.RemoveAll(n => n == null);
         return neighboursToCheck.TrueForAll(n => n.gameObject.activeSelf);
     }
 

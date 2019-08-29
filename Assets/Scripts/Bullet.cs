@@ -16,8 +16,7 @@ public class Bullet : MonoBehaviour
             return;
         }
 
-        Vector3 newPosition = Vector3.MoveTowards(transform.position, target.transform.position, speed * Time.deltaTime);
-        transform.position = newPosition;
+        transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed * Time.deltaTime);;
 
         float distance = Vector3.Distance(transform.position, target.transform.position);
 

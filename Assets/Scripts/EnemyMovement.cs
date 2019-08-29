@@ -23,17 +23,14 @@ public class EnemyMovement : MonoBehaviour
         var newPosition = Vector3.MoveTowards(transform.position, currentPathGoal.Value.transform.position, speed * Time.deltaTime);
         transform.position = newPosition;
 
-        if(Vector3.Distance(transform.position, enemiesGoal.position) < 0.1)
+        if(Mathf.Approximately(Vector3.Distance(transform.position, enemiesGoal.position), 0))
         {
             castleDamaging.DamageCastle();
             Destroy(gameObject);
         }
-        else if(Vector3.Distance(transform.position, currentPathGoal.Value.transform.position) < 0.1)
+        else if(Mathf.Approximately(Vector3.Distance(transform.position, currentPathGoal.Value.transform.position), 0))
         {
-            if(currentPathGoal.Next != null)
-            {
-                currentPathGoal = currentPathGoal.Next;
-            }
+            currentPathGoal = currentPathGoal.Next;
         }
     }
 }

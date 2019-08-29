@@ -6,6 +6,7 @@ public class Maze : MonoBehaviour
 {
     public int minBaseXSize = 20;
     public int maxBaseXSize = 50;
+
     public int minBaseZSize = 20;
     public int maxBaseZSize = 50;
 
@@ -15,18 +16,16 @@ public class Maze : MonoBehaviour
     public GameObject enemiesGoalPrefab;
     public GameObject enemiesSpawnerPrefab;
 
-    List<List<MazeUnit>> matrix;
-
-    public Vector3 baseSize;
-
-    Transform platformsHolder;
-    List<MazeUnit> startingMazeUnitCandidates;
     public LinkedList<MazeUnit> path;
 
     public int pathTries = 0;
     public int pathMaxTries = 1000;
+    public float maxPathSize;
+    public Vector3 baseSize;
 
-    readonly float MAZE_UNIT_POSITION_OFFSET = 0.5f;
+    List<List<MazeUnit>> matrix;
+    Transform platformsHolder;
+    List<MazeUnit> startingMazeUnitCandidates;
 
     private void Start()
     {
@@ -36,6 +35,7 @@ public class Maze : MonoBehaviour
         path = new LinkedList<MazeUnit>();
 
         baseSize = new Vector3(Random.Range(minBaseXSize, maxBaseXSize), 1, Random.Range(minBaseZSize, maxBaseZSize));
+        maxPathSize = baseSize.x * baseSize.z / 6;
 
         SpawnMazeUnits();
         MakePath();
@@ -85,25 +85,26 @@ public class Maze : MonoBehaviour
         pathTries++;
         current.gameObject.SetActive(false);
         path.AddLast(current);
-        bool foundPath = false;
 
         foreach(var dir in current.GetRandomizedAvailableDiggableDirections())
         {
             var neighbour = current.neighbours[dir];
 
-            if(length >= baseSize.x * baseSize.z / 6)
+            if(length >= maxPathSize)
             {
                 return true;
             }
 
-            if(!neighbour.isBorder && neighbour.CanBeDugFrom(dir.GetOpposite()))
+            if(neighbour.CanBeDugFrom(dir.GetOpposite()))
             {
-                foundPath = MakePathHelper(neighbour, length + 1);
-
-                if (foundPath)
+                if (MakePathHelper(neighbour, length + 1))
                 {
                     return true;
                 }
+                // Sometimes the algorithm can get stuck in a long recursion while trying to find a good lengthy path.
+                // That is why we have this code here that forces the path to end after a number of tries.
+                // We still check if the neighbour can be dug, because we don't want to dig for the end of the path from the
+                // border or make a loop in the path.
                 else if(pathTries >= pathMaxTries && neighbour.CanBeDugFrom(dir.GetOpposite()))
                 {
                     path.AddLast(neighbour);
@@ -115,7 +116,7 @@ public class Maze : MonoBehaviour
 
         current.gameObject.SetActive(true);
         path.RemoveLast();
-        return foundPath;
+        return false;
     }
 
     private void SpawnMazeUnits()
@@ -144,17 +145,15 @@ public class Maze : MonoBehaviour
     private void SpawnMazeUnit(int i, int j, float currentX, float currentZ)
     {
         GameObject mazeUnitObject = Instantiate(mazeUnitPrefab, transform);
-        mazeUnitObject.transform.position = new Vector3(currentX - MAZE_UNIT_POSITION_OFFSET, 1, currentZ - MAZE_UNIT_POSITION_OFFSET);
+        mazeUnitObject.transform.position = new Vector3(currentX, 1, currentZ);
 
         GameObject baseUnitObject = Instantiate(baseUnitPrefab, platformsHolder);
         baseUnitObject.transform.position = mazeUnitObject.transform.position + Vector3.down;
 
         MazeUnit mazeUnit = mazeUnitObject.GetComponent<MazeUnit>();
         mazeUnit.baseUnit = baseUnitObject;
-        matrix[matrix.Count - 1].Add(mazeUnit);
         mazeUnit.x = i;
         mazeUnit.y = j;
-
 
         if(AreBorderIndexes(i, j))
         {
@@ -166,6 +165,7 @@ public class Maze : MonoBehaviour
         }
 
         SetNeighbouring(mazeUnit, i, j);
+        matrix[matrix.Count - 1].Add(mazeUnit);
     }
 
     private void SetNeighbouring(MazeUnit mazeUnit, int i, int j)
@@ -191,6 +191,7 @@ public class Maze : MonoBehaviour
         }
     }
 
+    // Returns if the maze unit at this position is on the border of the maze.
     private bool AreBorderIndexes(int i, int j)
     {
         return i == 0 || j == 0 || i == baseSize.x - 1 || j == baseSize.z - 1;
