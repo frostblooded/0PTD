@@ -44,8 +44,12 @@ public class Maze : MonoBehaviour
         var firstPathUnit = path.First.Value;
         var lastPathUnit = path.Last.Value;
         path.RemoveFirst();
-        Instantiate(enemiesSpawnerPrefab, firstPathUnit.transform.position, Quaternion.identity);
-        Instantiate(enemiesGoalPrefab, lastPathUnit.transform.position, Quaternion.identity);
+
+        // Also setting the names manually as they have "(Clone)" at the end otherwise for some reason.
+        var enemiesSpawnerObject = Instantiate(enemiesSpawnerPrefab, firstPathUnit.transform.position, Quaternion.identity);
+        enemiesSpawnerObject.name = "Enemies Spawner";
+        var enemiesGoalObject = Instantiate(enemiesGoalPrefab, lastPathUnit.transform.position, Quaternion.identity);
+        enemiesGoalObject.name = "Enemies Goal";
     }
 
     private void CleanupBase()

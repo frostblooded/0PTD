@@ -183,7 +183,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &494736928
 Transform:
@@ -456,7 +456,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &2138143478
 Transform:
@@ -557,16 +557,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Canvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 6673303608826422832, guid: 028d2048a15e48744ac2be3aa3deda47,
-        type: 3}
-      propertyPath: m_FontData.m_HorizontalOverflow
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6673303608826422832, guid: 028d2048a15e48744ac2be3aa3deda47,
-        type: 3}
-      propertyPath: m_FontData.m_VerticalOverflow
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6673303608961952297, guid: 028d2048a15e48744ac2be3aa3deda47,
         type: 3}
@@ -672,16 +662,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6673303608826422833, guid: 028d2048a15e48744ac2be3aa3deda47,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 238.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6673303608826422833, guid: 028d2048a15e48744ac2be3aa3deda47,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 54.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 028d2048a15e48744ac2be3aa3deda47, type: 3}

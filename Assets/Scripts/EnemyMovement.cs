@@ -15,7 +15,7 @@ public class EnemyMovement : MonoBehaviour
     private void Start()
     {
         castleDamaging = GetComponent<CastleDamaging>();
-        enemiesGoal = GameObject.Find("Enemies Goal(Clone)").transform;
+        enemiesGoal = GameObject.Find("Enemies Goal").transform;
     }
 
     private void Update()
