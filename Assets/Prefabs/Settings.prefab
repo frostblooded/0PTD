@@ -43,4 +43,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bee3df28b13aef639a43442a03b740b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalTowerDespawnDelay: 12
+  towerDespawnDelay: 12
+  normalTowerSpawnChance: 40
+  multiTowerSpawnChance: 60

@@ -7,7 +7,7 @@ public class Settings : MonoBehaviour
     private static Settings instance;
     public static Settings Instance { get { return instance; } }
     
-    public float normalTowerDespawnDelay;
+    public float towerDespawnDelay;
 
     private void Awake() {
         if(instance != null && instance != this) {

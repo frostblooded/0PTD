@@ -45,3 +45,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnCooldownCoeficient: 120
   spawnCooldown: 0
+  normalTowerPrefab: {fileID: 8877654110430815239, guid: 024eb8d7dbc037a43b2018e1ea2e4139,
+    type: 3}
+  multiTowerPrefab: {fileID: 978947674924590500, guid: 0dd47940d2b57444bb0c24467fa37f3d,
+    type: 3}
+  normalTowerSpawnChance: 90
+  multiTowerSpawnChance: 10

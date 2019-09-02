@@ -7,13 +7,27 @@ public class TowerSpawner : MonoBehaviour
     public float spawnCooldownCoeficient;
     public float spawnCooldown;
 
+    public GameObject normalTowerPrefab;
+    public GameObject multiTowerPrefab;
+
+    public float normalTowerSpawnChance = 90f;
+    public float multiTowerSpawnChance = 10f;
+
     float lastSpawnTime;
 
     private void Start()
     {
         lastSpawnTime = Mathf.NegativeInfinity;
         Maze maze = GameObject.Find("Maze").GetComponent<Maze>();
-        spawnCooldown = Settings.Instance.normalTowerDespawnDelay * spawnCooldownCoeficient / maze.path.Count;
+        spawnCooldown = Settings.Instance.towerDespawnDelay * spawnCooldownCoeficient / maze.path.Count;
+
+        if(spawnCooldown > Settings.Instance.towerDespawnDelay) {
+            spawnCooldown = Settings.Instance.towerDespawnDelay;
+        }
+
+        if(!Mathf.Approximately(normalTowerSpawnChance + multiTowerSpawnChance, 100)) {
+            Debug.LogError("Tower spawn chances must be 100% when summed.");
+        }
     }
 
     private void Update()
@@ -30,7 +44,7 @@ public class TowerSpawner : MonoBehaviour
         
         if(randomUnoccupiedLanding)
         {
-            randomUnoccupiedLanding.SpawnTower();
+            randomUnoccupiedLanding.SpawnTower(GetRandomTowerPrefab());
             lastSpawnTime = Time.time;
         }
     }
@@ -61,5 +75,31 @@ public class TowerSpawner : MonoBehaviour
         }
 
         return result;
+    }
+
+    private GameObject GetRandomTowerPrefab() {
+        float randomFloat = Random.Range(0, 101);
+        var towers = GetTowersWithSpawnChances();
+        float stackingChance = 0;
+
+        foreach(var tower in towers) {
+            if(stackingChance + tower.Key >= randomFloat) {
+                return tower.Value;
+            }
+
+            stackingChance += tower.Key;
+        }
+
+        return towers[0].Value;
+    }
+
+    private List<KeyValuePair<float, GameObject>> GetTowersWithSpawnChances() {
+        var res =  new List<KeyValuePair<float, GameObject>>() {
+            new KeyValuePair<float, GameObject>(normalTowerSpawnChance, normalTowerPrefab),
+            new KeyValuePair<float, GameObject>(multiTowerSpawnChance, multiTowerPrefab)
+        };
+
+        res.Sort((x, y) => y.Key.CompareTo(x.Key));
+        return res;
     }
 }
