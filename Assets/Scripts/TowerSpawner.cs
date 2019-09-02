@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TowerSpawner : MonoBehaviour
 {
+    public float spawnCooldownCoeficient;
     public float spawnCooldown;
 
     float lastSpawnTime;
@@ -11,6 +12,8 @@ public class TowerSpawner : MonoBehaviour
     private void Start()
     {
         lastSpawnTime = Mathf.NegativeInfinity;
+        Maze maze = GameObject.Find("Maze").GetComponent<Maze>();
+        spawnCooldown = Settings.Instance.normalTowerDespawnDelay * spawnCooldownCoeficient / maze.path.Count;
     }
 
     private void Update()

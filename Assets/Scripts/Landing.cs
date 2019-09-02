@@ -5,14 +5,13 @@ using UnityEngine;
 public class Landing : MonoBehaviour
 {
     public GameObject towerPrefab;
-    public float towerDespawnDelay;
 
     float towerSpawnTime;
     GameObject spawnedTower;
 
     private void Update()
     {
-        if(IsOccupied() && towerSpawnTime + towerDespawnDelay < Time.time)
+        if(IsOccupied() && towerSpawnTime + Settings.Instance.normalTowerDespawnDelay < Time.time)
         {
             DespawnTower();
         }
