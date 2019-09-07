@@ -43,11 +43,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5915b57cbcef4e94280c5cb1c5401310, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnCooldownCoeficient: 120
+  spawnCooldownCoeficient: 85
   spawnCooldown: 0
   normalTowerPrefab: {fileID: 8877654110430815239, guid: 024eb8d7dbc037a43b2018e1ea2e4139,
     type: 3}
   multiTowerPrefab: {fileID: 978947674924590500, guid: 0dd47940d2b57444bb0c24467fa37f3d,
     type: 3}
-  normalTowerSpawnChance: 90
-  multiTowerSpawnChance: 10
+  normalTowerSpawnChance: 95
+  multiTowerSpawnChance: 5

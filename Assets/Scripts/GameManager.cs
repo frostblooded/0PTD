@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public Text healthText;
+    public Text timeText;
     public float maxCastleHealth;
     public float currentCastleHealth;
 
@@ -14,6 +15,11 @@ public class GameManager : MonoBehaviour
     {
         currentCastleHealth = maxCastleHealth;
         ShowCastleHealthText();
+        ShowTimeText();
+    }
+
+    private void Update() {
+        ShowTimeText();
     }
 
     public void DamageCastle(float damage)
@@ -29,6 +35,10 @@ public class GameManager : MonoBehaviour
 
     private void ShowCastleHealthText()
     {
-        healthText.text = "Castle health: " + currentCastleHealth + "/" + maxCastleHealth;
+        healthText.text = string.Format("Health: {0}/{1}", currentCastleHealth, maxCastleHealth);
+    }
+
+    private void ShowTimeText() {
+        timeText.text = string.Format("{0:0.0} seconds", Time.time);
     }
 }
