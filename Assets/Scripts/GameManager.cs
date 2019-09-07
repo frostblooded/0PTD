@@ -39,6 +39,6 @@ public class GameManager : MonoBehaviour
     }
 
     private void ShowTimeText() {
-        timeText.text = string.Format("{0:0.0} seconds", Time.time);
+        timeText.text = string.Format("{0:0.0} seconds", Time.timeSinceLevelLoad);
     }
 }
