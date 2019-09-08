@@ -4,17 +4,18 @@ using UnityEngine;
 
 public class Tower : MonoBehaviour
 {
-    public float attackRange;
     public float attackCooldown;
 
     float lastAttack;
     Attackable lockedOnTarget;
     Shooting shooting;
+    RangedShooting rangedShooting;
 
     private void Start()
     {
         lastAttack = Mathf.NegativeInfinity;
         shooting = GetComponent<Shooting>();
+        rangedShooting = GetComponent<RangedShooting>();
     }
 
     private void Update()
@@ -32,34 +33,10 @@ public class Tower : MonoBehaviour
 
     private void SetLockedOnTarget()
     {
-        if(!lockedOnTarget || Vector3.Distance(transform.position, lockedOnTarget.transform.position) > attackRange)
+        // If there is no locked on target or it has gone out of range, pick a new one
+        if(!lockedOnTarget || Vector3.Distance(transform.position, lockedOnTarget.transform.position) > rangedShooting.attackRange)
         {
-            lockedOnTarget = GetClosestAttackableInRange();
+            lockedOnTarget = rangedShooting.GetClosestAttackableInRange();
         }
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.DrawWireSphere(transform.position, attackRange);
-    }
-
-    private Attackable GetClosestAttackableInRange()
-    {
-        Attackable closestAttackable = null;
-        float closestAttackableDistance = Mathf.Infinity;
-        Attackable[] attackables = FindObjectsOfType<Attackable>();
-
-        foreach (var attackable in attackables)
-        {
-            float currentDist = Vector3.Distance(transform.position, attackable.transform.position);
-
-            if (currentDist < closestAttackableDistance && currentDist <= attackRange)
-            {
-                closestAttackable = attackable;
-                closestAttackableDistance = currentDist;
-            }
-        }
-
-        return closestAttackable;
     }
 }
