@@ -93,7 +93,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cc07969c11065544a82e784016bc952, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackCooldown: 1
 --- !u!114 &7953373821522720266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,6 +109,8 @@ MonoBehaviour:
     type: 3}
   attackDamage: 3
   bulletSpeed: 10
+  attackCooldown: 1
+  lastAttack: 0
 --- !u!114 &-5687159415552194812
 MonoBehaviour:
   m_ObjectHideFlags: 0

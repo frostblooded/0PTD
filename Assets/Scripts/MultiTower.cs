@@ -4,20 +4,16 @@ using UnityEngine;
 
 public class MultiTower : MonoBehaviour
 {
-    public float attackCooldown;
-
-    float lastAttack;
     Shooting shooting;
 
     private void Start()
     {
-        lastAttack = Mathf.NegativeInfinity;
         shooting = GetComponent<Shooting>();
     }
 
     private void Update()
     {
-        if (lastAttack + attackCooldown < Time.time)
+        if (shooting.IsReadyToAttack())
         {
             ShootAtAll();
         }
@@ -30,6 +26,6 @@ public class MultiTower : MonoBehaviour
             shooting.Shoot(attackable);
         }
 
-        lastAttack = Time.time;
+        shooting.lastAttack = Time.time;
     }
 }

@@ -4,29 +4,25 @@ using UnityEngine;
 
 public class Tower : MonoBehaviour
 {
-    public float attackCooldown;
-
-    float lastAttack;
     Attackable lockedOnTarget;
     Shooting shooting;
     RangedShooting rangedShooting;
 
     private void Start()
     {
-        lastAttack = Mathf.NegativeInfinity;
         shooting = GetComponent<Shooting>();
         rangedShooting = GetComponent<RangedShooting>();
     }
 
     private void Update()
     {
-        if (lastAttack + attackCooldown < Time.time)
+        if (shooting.IsReadyToAttack())
         {
             SetLockedOnTarget();
 
             if(lockedOnTarget) {
                 shooting.Shoot(lockedOnTarget);
-                lastAttack = Time.time;
+                shooting.lastAttack = Time.time;
             }
         }
     }

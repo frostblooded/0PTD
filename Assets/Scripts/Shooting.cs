@@ -7,11 +7,15 @@ public class Shooting : MonoBehaviour
     public GameObject bulletPrefab;
     public float attackDamage;
     public float bulletSpeed;
+    public float attackCooldown;
+    [HideInInspector]
+    public float lastAttack;
 
     Transform bulletHolder;
 
     private void Start() {
         bulletHolder = GameObject.Find("Bullets").transform;
+        lastAttack = Mathf.NegativeInfinity;
     }
 
     public void Shoot(Attackable target)
@@ -22,5 +26,9 @@ public class Shooting : MonoBehaviour
         bullet.target = target;
         bullet.damage = attackDamage;
         bullet.speed = bulletSpeed;
+    }
+
+    public bool IsReadyToAttack() {
+        return lastAttack + attackCooldown < Time.time;
     }
 }

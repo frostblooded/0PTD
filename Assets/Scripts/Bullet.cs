@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    [HideInInspector]
     public float speed;
+    [HideInInspector]
     public Attackable target;
+    [HideInInspector]
     public float damage;
 
     private void Update()
