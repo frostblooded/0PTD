@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DamagingShooting : Shooting
 {
+    public float attackDamage;
     public GameObject damagingBulletPrefab;
 
     public override GameObject Shoot(Attackable target)

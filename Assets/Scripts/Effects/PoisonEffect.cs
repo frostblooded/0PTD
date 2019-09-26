@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class PoisonEffect : Effect
 {
-    public float damage = 2;
-    public float damageCooldown = 2;
+    [HideInInspector]
+    public float damage;
+    [HideInInspector]
+    public float damageCooldown;
 
     float lastAttack;
 
-    public PoisonEffect()
+    public PoisonEffect(float newDuration, float newDamage, float newDamageCooldown)
+        : base(newDuration)
     {
+        damage = newDamage;
+        damageCooldown = newDamageCooldown;
         lastAttack = Time.time;
     }
 

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public abstract class Shooting : MonoBehaviour
 {
-    public float attackDamage;
     public float bulletSpeed;
     public float attackCooldown;
     [HideInInspector]
