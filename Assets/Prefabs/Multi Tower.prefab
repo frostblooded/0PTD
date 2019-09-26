@@ -108,4 +108,5 @@ MonoBehaviour:
   bulletSpeed: 10
   attackCooldown: 2
   lastAttack: 0
-  damagingBulletPrefab: {fileID: 0}
+  damagingBulletPrefab: {fileID: 1992118038247784518, guid: 780d39fae35bfaf4990b8db8a2277245,
+    type: 3}
