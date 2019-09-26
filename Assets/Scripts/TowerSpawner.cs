@@ -18,7 +18,7 @@ public class TowerSpawner : MonoBehaviour
     private void Start()
     {
         lastSpawnTime = Mathf.NegativeInfinity;
-        Maze maze = GameObject.Find("Maze").GetComponent<Maze>();
+        Maze maze = GameObject.Find("Globals").GetComponent<Maze>();
         spawnCooldown = Settings.Instance.towerDespawnDelay * spawnCooldownCoeficient / maze.path.Count;
 
         if(spawnCooldown > Settings.Instance.towerDespawnDelay) {

@@ -12,7 +12,6 @@ public class Maze : MonoBehaviour
 
     public GameObject mazeUnitPrefab;
     public GameObject baseUnitPrefab;
-    public GameObject basePlatformPrefab;
     public GameObject enemiesGoalPrefab;
     public GameObject enemiesSpawnerPrefab;
 

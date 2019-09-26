@@ -15,7 +15,7 @@ public class EnemiesSpawner : MonoBehaviour
     {
         lastSpawnTime = Mathf.NegativeInfinity;
         enemiesHolder = GameObject.Find("Enemies");
-        maze = GameObject.Find("Maze").GetComponent<Maze>();
+        maze = GameObject.Find("Globals").GetComponent<Maze>();
     }
 
     private void Update()

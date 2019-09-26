@@ -10,7 +10,7 @@ public class CastleDamaging : MonoBehaviour
 
     private void Start()
     {
-        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        gameManager = GameObject.Find("Globals").GetComponent<GameManager>();
     }
 
     public void DamageCastle()
