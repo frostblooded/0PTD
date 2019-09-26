@@ -147,7 +147,7 @@ public class Maze : MonoBehaviour
 
     private void SpawnMazeUnit(int i, int j, float currentX, float currentZ)
     {
-        GameObject mazeUnitObject = Instantiate(mazeUnitPrefab, transform);
+        GameObject mazeUnitObject = Instantiate(mazeUnitPrefab, platformsHolder);
         mazeUnitObject.transform.position = new Vector3(currentX, 1, currentZ);
 
         GameObject baseUnitObject = Instantiate(baseUnitPrefab, platformsHolder);

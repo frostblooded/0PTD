@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 8877654110430815236}
   - component: {fileID: 8877654110430815237}
   - component: {fileID: 5943709816238885329}
-  - component: {fileID: 7953373821522720266}
   - component: {fileID: -5687159415552194812}
+  - component: {fileID: -7260494848275540757}
   m_Layer: 0
   m_Name: Tower
   m_TagString: Untagged
@@ -93,24 +93,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cc07969c11065544a82e784016bc952, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7953373821522720266
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8877654110430815239}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59af7107171e7da71bc8307546aef9c9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 1992118038247784518, guid: 780d39fae35bfaf4990b8db8a2277245,
-    type: 3}
-  attackDamage: 3
-  bulletSpeed: 10
-  attackCooldown: 1
-  lastAttack: 0
 --- !u!114 &-5687159415552194812
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,3 +106,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackRange: 4
+--- !u!114 &-7260494848275540757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8877654110430815239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82773eb854325b240b27f14dbbd1904b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackDamage: 3
+  bulletSpeed: 10
+  attackCooldown: 1
+  lastAttack: 0
+  damagingBulletPrefab: {fileID: 1992118038247784518, guid: 780d39fae35bfaf4990b8db8a2277245,
+    type: 3}

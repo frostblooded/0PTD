@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public abstract class Bullet : MonoBehaviour
 {
     [HideInInspector]
     public float speed;
     [HideInInspector]
     public Attackable target;
-    [HideInInspector]
-    public float damage;
+
+    public abstract void OnContact(Attackable target);
 
     private void Update()
     {
@@ -25,8 +25,7 @@ public class Bullet : MonoBehaviour
 
         if(Mathf.Approximately(distance, 0))
         {
-            target.Damage(damage);
-            Destroy(gameObject);
+            OnContact(target);
         }
     }
 }

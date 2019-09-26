@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Shooting : MonoBehaviour
+public abstract class Shooting : MonoBehaviour
 {
-    public GameObject bulletPrefab;
     public float attackDamage;
     public float bulletSpeed;
     public float attackCooldown;
@@ -18,17 +17,20 @@ public class Shooting : MonoBehaviour
         lastAttack = Mathf.NegativeInfinity;
     }
 
-    public void Shoot(Attackable target)
+    public virtual GameObject Shoot(Attackable target)
     {
-        GameObject newObject = Instantiate(bulletPrefab, transform.position, Quaternion.identity, bulletHolder);
+        GameObject newBullet = Instantiate(GetBulletPrefab(), transform.position, Quaternion.identity, bulletHolder);
 
-        Bullet bullet = newObject.GetComponent<Bullet>();
+        Bullet bullet = newBullet.GetComponent<Bullet>();
         bullet.target = target;
-        bullet.damage = attackDamage;
         bullet.speed = bulletSpeed;
+
+        return newBullet;
     }
 
     public bool IsReadyToAttack() {
         return lastAttack + attackCooldown < Time.time;
     }
+
+    public abstract GameObject GetBulletPrefab();
 }

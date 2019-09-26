@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 978947674924590503}
   - component: {fileID: 978947674924590502}
   - component: {fileID: -5724790313351347721}
-  - component: {fileID: 6238649450106345423}
+  - component: {fileID: 2173250005535090457}
   m_Layer: 0
   m_Name: Multi Tower
   m_TagString: Untagged
@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c406526ebdaf8df2d8aaa90aa0fd065a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6238649450106345423
+--- !u!114 &2173250005535090457
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -101,12 +101,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 978947674924590500}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59af7107171e7da71bc8307546aef9c9, type: 3}
+  m_Script: {fileID: 11500000, guid: 82773eb854325b240b27f14dbbd1904b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 1992118038247784518, guid: 780d39fae35bfaf4990b8db8a2277245,
-    type: 3}
   attackDamage: 1
   bulletSpeed: 10
   attackCooldown: 2
   lastAttack: 0
+  damagingBulletPrefab: {fileID: 0}
