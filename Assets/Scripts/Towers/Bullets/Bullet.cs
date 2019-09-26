@@ -26,6 +26,7 @@ public abstract class Bullet : MonoBehaviour
         if(Mathf.Approximately(distance, 0))
         {
             OnContact(target);
+            Destroy(gameObject);
         }
     }
 }

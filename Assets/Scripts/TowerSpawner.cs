@@ -9,9 +9,11 @@ public class TowerSpawner : MonoBehaviour
 
     public GameObject normalTowerPrefab;
     public GameObject multiTowerPrefab;
+    public GameObject poisoningTowerPrefab;
 
-    public float normalTowerSpawnChance = 90f;
+    public float normalTowerSpawnChance = 45f;
     public float multiTowerSpawnChance = 10f;
+    public float poisoningTowerSpawnChance = 45f;
 
     float lastSpawnTime;
 
@@ -25,7 +27,7 @@ public class TowerSpawner : MonoBehaviour
             spawnCooldown = Settings.Instance.towerDespawnDelay;
         }
 
-        if(!Mathf.Approximately(normalTowerSpawnChance + multiTowerSpawnChance, 100)) {
+        if(!Mathf.Approximately(normalTowerSpawnChance + multiTowerSpawnChance + poisoningTowerSpawnChance, 100)) {
             Debug.LogError("Tower spawn chances must be 100% when summed.");
         }
     }
@@ -96,7 +98,8 @@ public class TowerSpawner : MonoBehaviour
     private List<KeyValuePair<float, GameObject>> GetTowersWithSpawnChances() {
         var res =  new List<KeyValuePair<float, GameObject>>() {
             new KeyValuePair<float, GameObject>(normalTowerSpawnChance, normalTowerPrefab),
-            new KeyValuePair<float, GameObject>(multiTowerSpawnChance, multiTowerPrefab)
+            new KeyValuePair<float, GameObject>(multiTowerSpawnChance, multiTowerPrefab),
+            new KeyValuePair<float, GameObject>(poisoningTowerSpawnChance, poisoningTowerPrefab),
         };
 
         res.Sort((x, y) => y.Key.CompareTo(x.Key));

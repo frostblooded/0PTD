@@ -10,6 +10,5 @@ public class DamagingBullet : Bullet
     public override void OnContact(Attackable target)
     {
         target.Damage(damage);
-        Destroy(gameObject);
     }
 }
