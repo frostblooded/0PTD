@@ -26,7 +26,7 @@ public class Maze : MonoBehaviour
     Transform platformsHolder;
     List<MazeUnit> startingMazeUnitCandidates;
 
-    private void Start()
+    private void Awake()
     {
         platformsHolder = GameObject.Find("Platforms").transform;
         matrix = new List<List<MazeUnit>>();
