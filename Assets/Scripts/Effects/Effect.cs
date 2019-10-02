@@ -5,13 +5,13 @@ using UnityEngine;
 public abstract class Effect
 {
     [HideInInspector]
-    public float duration;
+    public float remainingDuration;
 
     public GameObject target;
 
-    public Effect(GameObject newTarget, float newDuration)
+    public Effect(GameObject newTarget, float newRemainingDuration)
     {
-        duration = newDuration;
+        remainingDuration = newRemainingDuration;
         target = newTarget;
     }
 

@@ -122,7 +122,7 @@ MonoBehaviour:
   attackCooldown: 1
   lastAttack: 0
   poisonDuration: 4.5
-  poisonDamage: 1
+  poisonDamage: 0
   poisonDamageCooldown: 1
   poisoningBulletPrefab: {fileID: 414348517246696536, guid: a78cdb2713b224940a0ab41d1eadca39,
     type: 3}

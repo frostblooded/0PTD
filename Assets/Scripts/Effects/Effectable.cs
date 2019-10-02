@@ -1,41 +1,73 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class Effectable : MonoBehaviour
 {
-    private List<KeyValuePair<Effect, float>> effects;
+    private List<Effect> effects;
 
     private void Start()
     {
-        effects = new List<KeyValuePair<Effect, float>>();
+        effects = new List<Effect>();
     }
 
     private void Update()
     {
+        ReduceEffectsRemainingDuration();
         RemoveExpiredEffects();
         
-        foreach(var pair in effects)
+        foreach(var effect in effects)
         {
-            pair.Key.Tick();
+            effect.Tick();
+        }
+    }
+
+    private void ReduceEffectsRemainingDuration()
+    {
+        foreach(var effect in effects)
+        {
+            effect.remainingDuration -= Time.deltaTime;
         }
     }
 
     private void RemoveExpiredEffects()
     {
-        var expiredEffects = effects.Where(pair => pair.Key.duration + pair.Value <= Time.time);
-        effects = effects.Where(pair => !expiredEffects.Contains(pair)).ToList();
+        var expiredEffects = effects.Where(effect => effect.remainingDuration <= 0);
+        effects = effects.Where(effect => !expiredEffects.Contains(effect)).ToList();
 
-        foreach(var pair in expiredEffects)
+        foreach(var effect in expiredEffects)
         {
-            pair.Key.OnEnd();
+            effect.OnEnd();
         }
     }
 
     public void AddEffect(Effect effect)
     {
-        effects.Add(new KeyValuePair<Effect, float>(effect, Time.time));
-        effect.OnStart();
+        Effect alreadyAddedEffect = GetEffectOfType(effect.GetType());
+
+
+        if(alreadyAddedEffect != null)
+        {
+            alreadyAddedEffect.remainingDuration = effect.remainingDuration;
+        }
+        else
+        {
+            effects.Add(effect);
+            effect.OnStart();
+        }
+    }
+
+    public Effect GetEffectOfType(Type type) {
+        foreach(var effect in effects)
+        {
+            if(effect.GetType() == type)
+            {
+                return effect;
+            }
+        }
+
+        return null;
     }
 }

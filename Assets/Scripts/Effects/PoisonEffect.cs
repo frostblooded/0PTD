@@ -14,8 +14,8 @@ public class PoisonEffect : Effect
     Material previousMaterial;
     MeshRenderer targetMeshRenderer;
 
-    public PoisonEffect(GameObject newTarget, float newDuration, float newDamage, float newDamageCooldown)
-        : base(newTarget, newDuration)
+    public PoisonEffect(GameObject newTarget, float newRemainingDuration, float newDamage, float newDamageCooldown)
+        : base(newTarget, newRemainingDuration)
     {
         damage = newDamage;
         damageCooldown = newDamageCooldown;
@@ -46,6 +46,6 @@ public class PoisonEffect : Effect
     public override void OnEnd()
     {
         base.OnEnd();
-        targetMeshRenderer.material = poisonedMaterial;
+        targetMeshRenderer.material = previousMaterial;
     }
 }
