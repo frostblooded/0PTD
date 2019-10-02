@@ -5,30 +5,37 @@ using UnityEngine;
 
 public class Effectable : MonoBehaviour
 {
-    private Dictionary<Effect, float> effects;
+    private List<KeyValuePair<Effect, float>> effects;
 
     private void Start()
     {
-        effects = new Dictionary<Effect, float>();
+        effects = new List<KeyValuePair<Effect, float>>();
     }
 
     private void Update()
     {
-        effects = GetNonexpiredEffects(effects);
+        RemoveExpiredEffects();
         
-        foreach(var effect in effects.Keys)
+        foreach(var pair in effects)
         {
-            effect.Tick(gameObject);
+            pair.Key.Tick();
         }
     }
 
-    private Dictionary<Effect, float> GetNonexpiredEffects(Dictionary<Effect, float> effects)
+    private void RemoveExpiredEffects()
     {
-        return effects.Where(pair => pair.Key.duration + pair.Value > Time.time).ToDictionary(pair => pair.Key, pair => pair.Value);
+        var expiredEffects = effects.Where(pair => pair.Key.duration + pair.Value <= Time.time);
+        effects = effects.Where(pair => !expiredEffects.Contains(pair)).ToList();
+
+        foreach(var pair in expiredEffects)
+        {
+            pair.Key.OnEnd();
+        }
     }
 
     public void AddEffect(Effect effect)
     {
-        effects.Add(effect, Time.time);
+        effects.Add(new KeyValuePair<Effect, float>(effect, Time.time));
+        effect.OnStart();
     }
 }

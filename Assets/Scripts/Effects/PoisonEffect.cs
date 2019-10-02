@@ -10,22 +10,42 @@ public class PoisonEffect : Effect
     public float damageCooldown;
 
     float lastAttack;
+    Material poisonedMaterial;
+    Material previousMaterial;
+    MeshRenderer targetMeshRenderer;
 
-    public PoisonEffect(float newDuration, float newDamage, float newDamageCooldown)
-        : base(newDuration)
+    public PoisonEffect(GameObject newTarget, float newDuration, float newDamage, float newDamageCooldown)
+        : base(newTarget, newDuration)
     {
         damage = newDamage;
         damageCooldown = newDamageCooldown;
         lastAttack = Time.time;
+        targetMeshRenderer = target.GetComponent<MeshRenderer>();
     }
 
-    public override void Tick(GameObject target)
+    public override void Tick()
     {
+        base.Tick();
+
         if(lastAttack + damageCooldown <= Time.time)
         {
             Attackable attackable = target.GetComponent<Attackable>();
             attackable.Damage(damage);
             lastAttack = Time.time;
         }
+    }
+
+    public override void OnStart()
+    {
+        base.OnStart();
+        poisonedMaterial =  Resources.Load("Materials/PoisonedMaterial", typeof(Material)) as Material;
+        previousMaterial = targetMeshRenderer.material;
+        targetMeshRenderer.material = poisonedMaterial;
+    }
+
+    public override void OnEnd()
+    {
+        base.OnEnd();
+        targetMeshRenderer.material = poisonedMaterial;
     }
 }

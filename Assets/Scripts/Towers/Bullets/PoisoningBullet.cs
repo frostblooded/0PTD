@@ -14,6 +14,6 @@ public class PoisoningBullet : Bullet
     public override void OnContact(Attackable target)
     {
         Effectable effectable = target.GetComponent<Effectable>();
-        effectable.AddEffect(new PoisonEffect(poisonDuration, poisonDamage, poisonDamageCooldown));
+        effectable.AddEffect(new PoisonEffect(target.gameObject, poisonDuration, poisonDamage, poisonDamageCooldown));
     }
 }

@@ -7,10 +7,15 @@ public abstract class Effect
     [HideInInspector]
     public float duration;
 
-    public Effect(float newDuration)
+    public GameObject target;
+
+    public Effect(GameObject newTarget, float newDuration)
     {
         duration = newDuration;
+        target = newTarget;
     }
 
-    public virtual void Tick(GameObject target) {}
+    public virtual void Tick() { }
+    public virtual void OnStart() { }
+    public virtual void OnEnd() { }
 }
